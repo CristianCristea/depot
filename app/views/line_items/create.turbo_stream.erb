@@ -1,0 +1,9 @@
+<%# create turbo_stream files to cleanup the respond_to methods in the controller %>
+<%# respond_to can return an array of responses, but it you look messy %>
+<%= turbo_stream.replace 'notice' do %>
+  <%= render partial: 'store/notice', locals: { notice: @notice } %>
+<% end %>
+
+<%= turbo_stream.replace 'cart' do %>
+  <%= render partial: 'layouts/cart', locals: { cart: @cart } %>
+<% end %>
