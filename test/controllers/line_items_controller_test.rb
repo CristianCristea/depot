@@ -78,7 +78,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_equal line_item.reload.quantity, 1
 
     assert_difference('LineItem.count', -1) do
-      delete line_item_url(line_item)
+      delete line_item_url(line_item), as: :turbo_stream
     end
   end
 end
