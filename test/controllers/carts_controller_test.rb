@@ -61,9 +61,7 @@ class CartsControllerTest < ActionDispatch::IntegrationTest
     @cart = Cart.find(session[:cart_id])
 
     assert_difference('Cart.count', -1) do
-      delete cart_url(@cart)
+      delete cart_url(@cart), as: :turbo_stream
     end
-
-    assert_redirected_to store_index_url
   end
 end

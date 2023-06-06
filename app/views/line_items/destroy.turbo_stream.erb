@@ -1,0 +1,13 @@
+<% if @line_item.quantity.zero? %>
+  <%= turbo_stream.remove "lineItem-#{@line_item.id}" %>
+<% else %>
+  <%= turbo_stream.replace "lineItem-#{@line_item.id}" do %>
+    <%= render partial: 'line_items/line_item', locals: { line_item: @line_item } %>
+  <% end %>
+<% end %>
+
+<%# Re-render the cart to update the total price %>
+<%# After removing the last item cart.line_items is 0, removing it from the page %>
+<%= turbo_stream.replace "cart" do %>
+  <%= render partial: 'layouts/cart', locals: { cart: @line_item.cart } %>
+<% end %>

@@ -1,8 +1,9 @@
 <%# highlight the last added item %>
+
 <% if line_item == @current_item %>
-  <tr class="line-item-highlight">
+  <tr class="line-item-highlight" id=<%= "lineItem-#{line_item.id}" %>>
   <% else %>
-    <tr>
+    <tr id=<%= "lineItem-#{line_item.id}" %>>
     <% end %>
 
     <td class="text-right"><%= line_item.quantity %></td>
@@ -12,5 +13,8 @@
     </td>
     <td class="text-right font-bold">
       <%= number_to_currency(line_item.total_price) %>
+    </td>
+    <td class="ml-5 mt-3 inline-block rounded-lg px-2 text-white bg-green-600 h-7">
+      <%= link_to "-", line_item, data: { turbo_method: :delete } %>
     </td>
   </tr>

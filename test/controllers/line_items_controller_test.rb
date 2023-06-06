@@ -23,7 +23,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_response :success
-    assert_match(/<tr class="line-item-highlight">/, @response.body)
+    assert_match(/class="line-item-highlight"/, @response.body)
   end
 
   test 'should create line_item' do
@@ -52,11 +52,33 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to line_item_url(@line_item)
   end
 
-  test 'should destroy line_item' do
-    assert_difference('LineItem.count', -1) do
-      delete line_item_url(@line_item)
+  test 'should decrement the quantity of the line item and remove from cart' do
+    line_item = Cart.last.line_items.create(product: Product.last, quantity: 2)
+
+    assert_no_difference('LineItem.count') do
+      delete line_item_url(line_item)
     end
 
-    assert_redirected_to line_items_url
+    assert_equal line_item.reload.quantity, 1
+
+    assert_difference('LineItem.count', -1) do
+      delete line_item_url(line_item)
+    end
+
+    assert_redirected_to store_index_url
+  end
+
+  test 'should decrement the quantity of the line item and remove from cart via turbo_stream' do
+    line_item = Cart.last.line_items.create(product: Product.last, quantity: 2)
+
+    assert_no_difference('LineItem.count') do
+      delete line_item_url(line_item), as: :turbo_stream
+    end
+
+    assert_equal line_item.reload.quantity, 1
+
+    assert_difference('LineItem.count', -1) do
+      delete line_item_url(line_item)
+    end
   end
 end
